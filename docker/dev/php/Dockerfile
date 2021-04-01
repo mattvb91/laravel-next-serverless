@@ -31,4 +31,6 @@ ADD usr /usr/local/etc/php/conf.d/
 
 WORKDIR /app
 
-ENTRYPOINT [ "php", "artisan serve" ]
+EXPOSE 8000
+
+ENTRYPOINT [ "php", "artisan", "serve", "--host=0.0.0.0", "--port=8000" ]

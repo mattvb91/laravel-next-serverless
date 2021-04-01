@@ -6,17 +6,21 @@ services:
     build:
       context: ./docker/dev/nextjs
     ports:
-      - "3000:3000"
+      - 3000:3000
+    depends_on: 
+      - laravel-api
     container_name: nextjs-ui
     stdin_open: true
     volumes:
         - ./frontend:/app
     environment: 
-      - API_TARGET=http://laravel-api:8080
+      - API_TARGET=http://laravel-api:8000
 
   laravel-api:
     build:
       context: ./docker/dev/php
+    ports:
+      - 8000:8000
     environment:
       - XDEBUG_CONFIG="remote_host=172.17.0.1"
       - PHP_IDE_CONFIG="serverName=laravel.local"
