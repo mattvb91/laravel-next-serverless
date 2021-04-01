@@ -1,0 +1,13 @@
+version: "3"
+
+services: 
+  
+  nextjs-ui:
+    build:
+      context: ./docker/dev/nextjs
+    ports:
+      - "3000:3000"
+    container_name: nextjs-ui
+    stdin_open: true
+    volumes:
+        - ./frontend:/app
