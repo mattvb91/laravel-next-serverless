@@ -23,3 +23,7 @@ Route::get('/health', function () {
         "time" => time()
     ];
 })->name('health');
+
+Route::get('/info', function () {
+    return phpinfo();
+})->name('phpinfo');
