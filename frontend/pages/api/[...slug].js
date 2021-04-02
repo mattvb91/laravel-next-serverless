@@ -6,6 +6,9 @@ const apiProxy = createProxyMiddleware({
     changeOrigin: true,
     pathRewrite: { [`^/api`]: '/api' },
     secure: false,
+    headers: [{
+        "Content-Type": "application/json"
+    }]
 });
 
 export default function (req, res) {
