@@ -1,4 +1,10 @@
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import {createProxyMiddleware} from 'http-proxy-middleware';
+
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+}
 
 // Create proxy instance outside of request handler function to avoid unnecessary re-creation
 const apiProxy = createProxyMiddleware({
@@ -6,13 +12,10 @@ const apiProxy = createProxyMiddleware({
     changeOrigin: true,
     pathRewrite: { [`^/api`]: '/api' },
     secure: false,
-    headers: [{
-        "Content-Type": "application/json"
-    }]
 });
 
 export default function (req, res) {
-    apiProxy(req, res, (result) => {
+    return apiProxy(req, res, (result) => {
         if (result instanceof Error) {
             throw result;
         }
