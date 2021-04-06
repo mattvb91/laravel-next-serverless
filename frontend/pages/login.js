@@ -1,22 +1,13 @@
+import { useAuth } from "../contexts/auth"
+
 export default function Login() {
+
+    const auth = useAuth()
 
     const loginSubmit = async event => {
         event.preventDefault()
 
-
-        const res = await fetch('/api/auth/login', {
-            body: JSON.stringify({
-                email: event.target.email.value,
-                password: event.target.password.value,
-            }),
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-        console.log(res)
-
-        console.log(await res.json())
+        auth.login(event.target.email.value, event.target.password.value)
     }
 
     return (
@@ -28,7 +19,7 @@ export default function Login() {
                 <label htmlFor="email">Password:</label>
                 <input name="password" type="password"></input>
 
-                <input type="submit"/>
+                <input type="submit" />
             </form>
         </>
     )
