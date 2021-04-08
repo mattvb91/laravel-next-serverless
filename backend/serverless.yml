@@ -5,8 +5,11 @@ provider:
     # The AWS region in which to deploy (us-east-1 is the default)
     region: us-east-1
     # The stage of the application, e.g. dev, production, staging… ('dev' is the default)
-    stage: dev
+    stage: production
     runtime: provided.al2
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
 
 package:
     # Directories to exclude from deployment

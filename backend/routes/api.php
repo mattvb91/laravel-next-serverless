@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,17 @@ Route::get('/health', function () {
     ];
 })->name('health');
 
+/**
+ * We can use this to test our cloudformation correctly caches
+ */
+Route::middleware('cache.headers:public;max_age=3600;etag')->group(function () {
+    Route::get('/health/cache', function () {
+        return ["cached" => 3600];
+    })->name("cache");
+});
+
 Route::get('/info', function () {
-    return phpinfo();
+    if (App::environment("APP_ENV") === "local") {
+        return phpinfo();
+    }
 })->name('phpinfo');

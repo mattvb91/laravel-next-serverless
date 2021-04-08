@@ -1,2 +1,6 @@
 myNextApplication:
-  component: "@sls-next/serverless-component"
+  component: "@sls-next/serverless-component@1.19.0-alpha.42"
+  inputs:
+    build:
+      env:
+        API_TARGET: "<LAMBDA EXECUTE URL HERE>"
