@@ -27,7 +27,6 @@ RUN docker-php-ext-install gd \
 RUN pecl install xdebug \
  && docker-php-ext-enable xdebug
 
-
 ADD usr /usr/local/etc/php/conf.d/
 
 #### COMPOSER
