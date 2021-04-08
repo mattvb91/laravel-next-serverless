@@ -24,6 +24,7 @@ RUN docker-php-ext-install gd \
                            sockets \
                            intl
 
+
 RUN pecl install xdebug \
  && docker-php-ext-enable xdebug
 

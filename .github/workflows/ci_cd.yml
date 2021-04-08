@@ -1,0 +1,53 @@
+on: push
+
+jobs:
+
+  build-and-publish-docker-php-head:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
+
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            php:
+              - 'docker/dev/php/**'
+
+      - name: Build and Publish head Docker PHP image
+        # run only if some file in 'src' folder was changed
+        if: steps.changes.outputs.php == 'true'
+        uses: VaultVulp/gp-docker-action@1.1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+          image-name: php # Provide Docker image name
+          dockerfile: ./docker/dev/php/Dockerfile
+          build-context: ./docker/dev/php/
+          image-tag: head # Provide Docker image tag
+          pull-image: true # Raise the flag to try to pull image
+
+
+  build-and-publish-docker-php-composer-head:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
+
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            composer:
+              - 'docker/dev/php-composer/**'
+
+      - name: Build and Publish head Docker PHP Composer image
+        if: steps.changes.outputs.composer == 'true'
+        uses: VaultVulp/gp-docker-action@1.1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+          image-name: php-composer # Provide Docker image name
+          dockerfile: ./docker/dev/php-composer/Dockerfile
+          build-context: ./docker/dev/php-composer/
+          image-tag: head # Provide Docker image tag
+          pull-image: true # Raise the flag to try to pull image
