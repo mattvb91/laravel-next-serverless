@@ -1,6 +1,7 @@
+import Layout from "../components/Layout"
 import { useAuth } from "../contexts/auth"
 
-export default function Login() {
+const Login = () => {
 
     const auth = useAuth()
 
@@ -24,3 +25,7 @@ export default function Login() {
         </>
     )
 }
+
+Login.Layout = Layout;
+
+export default Login;

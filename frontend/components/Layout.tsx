@@ -1,8 +1,7 @@
-import React from "react"
 import { useAuth } from "../contexts/auth"
 import { Header } from "./Header/Header"
 
-const Layout = ({children}) => {
+export default function Layout({ children }) {
     const auth = useAuth()
 
     return (
@@ -12,5 +11,3 @@ const Layout = ({children}) => {
         </>
     )
 }
-
-export default Layout;
