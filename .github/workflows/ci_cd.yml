@@ -1,0 +1,115 @@
+on: push
+
+jobs:
+
+  build-docker-php-head:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
+
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            php:
+              - 'docker/dev/php/**'
+
+      - name: Build and Publish head Docker PHP image
+        # run only if some file in 'src' folder was changed
+        if: steps.changes.outputs.php == 'true'
+        uses: VaultVulp/gp-docker-action@1.1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+          image-name: php # Provide Docker image name
+          dockerfile: ./docker/dev/php/Dockerfile
+          build-context: ./docker/dev/php/
+          image-tag: head # Provide Docker image tag
+          pull-image: true # Raise the flag to try to pull image
+
+
+  build-docker-php-composer-head:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
+
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            composer:
+              - 'docker/dev/php-composer/**'
+
+      - name: Build and Publish head Docker PHP Composer image
+        if: steps.changes.outputs.composer == 'true'
+        uses: VaultVulp/gp-docker-action@1.1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+          image-name: php-composer # Provide Docker image name
+          dockerfile: ./docker/dev/php-composer/Dockerfile
+          build-context: ./docker/dev/php-composer/
+          image-tag: head # Provide Docker image tag
+          pull-image: true # Raise the flag to try to pull image
+
+  phpunit:
+    runs-on: ubuntu-20.04
+    needs:
+      - build-docker-php-head
+      - build-docker-php-composer-head
+    if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && always() }}
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+      - name: Set vars # TODO change head tag to latest once master build is in
+        if: steps.changes.outputs.backend == 'true'
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          fi
+      - name: Login to github registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: PHPUnit
+        run: |
+          echo ${{ env.REPO_NAME }}
+          echo ${{ env.IMAGE_TAG }}
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan test
+
+#  deploy-storybook:
+#   runs-on: ubuntu-latest
+#   needs: phpunit
+#   steps:
+#     - name: Checkout 🛎️
+#       uses: actions/checkout@v2
+#       with:
+#         persist-credentials: false
+#     - uses: dorny/paths-filter@v2
+#       id: changes
+#       with:
+#         filters: |
+#           frontend:
+#             - 'frontend/**'
+#     - name: Build and Publish head Docker PHP Composer image
+#       if: steps.changes.outputs.frontend == 'true'
+#     - name: Install and Build 🔧
+#       run: | # Install npm packages and build the Storybook files
+#         npm install
+#         npm run build-storybook
+#     - name: Deploy 🚀
+#       uses: JamesIves/github-pages-deploy-action@4.1.1
+#       with:
+#         branch: main # The branch the action should deploy to.
+#         folder: docs-build # The folder that the build-storybook script generates files.

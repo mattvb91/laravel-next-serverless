@@ -1,7 +1,8 @@
 import Head from 'next/head'
+import Layout from '../components/Layout'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+const Home = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -63,3 +64,7 @@ export default function Home() {
     </div>
   )
 }
+
+Home.Layout = Layout;
+
+export default Home;

@@ -1,4 +1,5 @@
-import {createProxyMiddleware} from 'http-proxy-middleware';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 export const config = {
     api: {
@@ -14,7 +15,8 @@ const apiProxy = createProxyMiddleware({
     secure: false,
 });
 
-export default function (req, res) {
+export default function (req: NextApiRequest, res: NextApiResponse) {
+    //@ts-ignore
     return apiProxy(req, res, (result) => {
         if (result instanceof Error) {
             throw result;
