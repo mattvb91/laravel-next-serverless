@@ -60,7 +60,14 @@ jobs:
     if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && always() }}
     steps:
       - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
       - name: Set vars # TODO change head tag to latest once master build is in
+        if: steps.changes.outputs.backend == 'true'
         run: |
           echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
           if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
