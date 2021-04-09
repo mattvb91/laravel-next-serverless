@@ -1,11 +1,39 @@
-import { useState, createContext, useContext, useEffect } from 'react'
+import { useState, createContext, useContext, useEffect, Context, Dispatch, SetStateAction } from 'react'
 import { useRouter } from 'next/router'
 import { useCookies } from "react-cookie"
 
-const AuthContext = createContext({});
+/**
+ * The inital auth response we get from laravel auth
+ */
+type Identity = {
+    access_token: string,
+    token_type: string,
+    expires_in: Number
+}
+
+export type AuthType = {
+    isAuthenticated: boolean,
+    identity?: Identity,
+    me?: MeType,
+    loading: boolean,
+    login(email: string, password: string): void,
+    logout(): void,
+}
+
+declare type MeType = {
+    id: number,
+    name: string,
+    email: string,
+    email_verified_at?: string,
+    created_at: string,
+    updated_at: string
+}
+
+const AuthContext: Context<AuthType | null> = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [identity, setIdentity] = useState()
+    const [identity, setIdentity]: [identity: Identity, setIdentity: Dispatch<SetStateAction<Identity>>] = useState()
+    const [me, setMe]: [me: MeType, setMe: Dispatch<SetStateAction<MeType>>] = useState()
     const [loading, setLoading] = useState(true)
     const [cookie, setCookie] = useCookies(["identity"])
     const router = useRouter()
@@ -31,12 +59,27 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const fetchMe = async () => {
+        const res = await fetch('/api/auth/me', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${identity.access_token}`
+            },
+            method: "POST"
+        })
+
+        setMe(await res.json())
+    }
 
     useEffect(() => {
-        if (window.localStorage.getItem("canRefresh") && !identity) {
+        if (window.localStorage.getItem("canRefresh") === "true" && !identity) {
             refresh();
         }
-    }, [])
+
+        if (window.localStorage.getItem("canRefresh") === "true" && identity) {
+            fetchMe()
+        }
+    }, [identity])
 
     const login = async (email, password) => {
         const res = await fetch('/api/auth/login', {
@@ -59,7 +102,7 @@ export const AuthProvider = ({ children }) => {
                 sameSite: true,
                 httpOnly: false
             })
-            window.localStorage.setItem("canRefresh", true)
+            window.localStorage.setItem("canRefresh", "true")
             router.push("/")
         }
     }
@@ -67,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => { }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!identity, identity, login, loading, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!identity, identity, me, login, loading, logout }}>
             {children}
         </AuthContext.Provider>
     )

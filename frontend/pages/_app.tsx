@@ -1,14 +1,19 @@
-import Identity from '../components/identity'
 import { AuthProvider } from '../contexts/auth'
 import '../styles/globals.css'
 
+const Noop = ({ children }) => children
+
 function MyApp({ Component, pageProps }) {
-  return <>
+
+  const Layout = Component.Layout || Noop
+
+  return (
     <AuthProvider>
-      <Identity />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </AuthProvider>
-  </>
+  )
 }
 
 export default MyApp
