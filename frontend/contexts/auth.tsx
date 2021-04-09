@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
 
     useEffect(() => {
-        if (window.localStorage.getItem("canRefresh") && !identity) {
+        if (window.localStorage.getItem("canRefresh") === "true" && !identity) {
             refresh();
         }
     }, [])
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
                 sameSite: true,
                 httpOnly: false
             })
-            window.localStorage.setItem("canRefresh", true)
+            window.localStorage.setItem("canRefresh", "true")
             router.push("/")
         }
     }
