@@ -32,12 +32,18 @@ body {
 
 
 a {
-  color: inherit;
+  color: blue;
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: bold;
+    padding: 20px;
 }
 `
 
