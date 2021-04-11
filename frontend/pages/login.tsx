@@ -15,12 +15,12 @@ const Login = () => {
         <>
             <form onSubmit={loginSubmit}>
                 <label htmlFor="email">Email:</label>
-                <input name="email" type="email"></input>
+                <input data-cy="login-email" name="email" type="email"></input>
 
                 <label htmlFor="email">Password:</label>
-                <input name="password" type="password"></input>
+                <input data-cy="login-password" name="password" type="password"></input>
 
-                <input type="submit" />
+                <input data-cy="submit-login" type="submit" />
             </form>
         </>
     )
