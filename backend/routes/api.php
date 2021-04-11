@@ -38,6 +38,7 @@ Route::get('/health', function () {
     ];
 })->name('health');
 
+
 /**
  * We can use this to test our cloudformation correctly caches
  */
@@ -45,6 +46,9 @@ Route::middleware('cache.headers:public;max_age=3600;etag')->group(function () {
     Route::get('/health/cache', function () {
         return ["cached" => 3600];
     })->name("cache");
+
+    Route::get('/summary', 'App\Http\Controllers\ExampleController@summary')
+        ->name('Summary');
 });
 
 Route::get('/info', function () {
