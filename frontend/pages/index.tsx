@@ -1,70 +1,59 @@
-import Head from 'next/head'
-import Layout from '../components/Layout'
-import styles from '../styles/Home.module.css'
+import { Row } from "react-styled-flexboxgrid";
+import { InfoBox } from '../components/InfoBox/InfoBox';
+import Layout from '../components/Layout';
+import { internalAPIReq } from "./api/[...slug]";
 
-const Home = () => {
+/**
+ * This page is an example using SSR while fetching data
+ * from the api and then caching the page for 10 seconds in CDN.
+ * 
+ * Your could also use getStaticProps() instead 
+ */
+const Home = ({ frontend, backend }) => {
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+    <>
+      <Row center="xs">
+        <h2>Frontend Libs</h2>
+      </Row>
+      <Row>
+        <p>Some of the frontend libs used in this starter kit.</p>
+      </Row>
+      <Row>
+        {frontend.map((item, key) => <InfoBox {...item} key={key} />)}
+      </Row>
+      <Row center="xs">
+        <h2>Backend Libs</h2>
+      </Row>
+      <Row>
+        <p>Some of the main Backend (/api) (PHP) libs used.</p>
+      </Row>
+      <Row>
+        {backend.map((item, key) => {
+          //packagist returns a different format lets parse it quickly
+          const props = item.packages[Object.keys(item["packages"])[0]];
+          return (
+            <InfoBox {...props[0]} key={key} />
+          )
+        })}
+      </Row>
+    </>
   )
 }
 
 Home.Layout = Layout;
 
 export default Home;
+
+export const getServerSideProps = async ({ req, res }) => {
+
+  //We want to fetch internal api so we import the function
+  //instead of another http request
+  const summaryData = await internalAPIReq(req, res, "/api/summary");
+
+  res.setHeader('Cache-Control', 'max-age=10, public')
+
+  return {
+    props: { ...summaryData }
+  }
+}

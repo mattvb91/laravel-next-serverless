@@ -1,5 +1,4 @@
 import { AuthProvider } from '../contexts/auth'
-import '../styles/globals.css'
 
 const Noop = ({ children }) => children
 

@@ -1,0 +1,13 @@
+{
+  "name": "e2ecypress",
+  "version": "1.0.0",
+  "description": "Sample test setup",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^7.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
