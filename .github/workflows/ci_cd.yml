@@ -141,13 +141,14 @@ jobs:
   e2eTests:
     runs-on: ubuntu-latest
     steps:
-      run: |
-        echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
-        if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-          echo "IMAGE_TAG=head" >> $GITHUB_ENV
-        else
-          echo "IMAGE_TAG=head" >> $GITHUB_ENV
-        fi
+      - name: Set vars
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          fi
       - uses: actions/checkout@v2
       - name: Generate new docker-compose.test.yml
         run: |
