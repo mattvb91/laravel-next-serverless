@@ -149,6 +149,13 @@ jobs:
           else
             echo "IMAGE_TAG=head" >> $GITHUB_ENV
           fi
+      - name: Login to github registry
+        if: steps.changes.outputs.backend == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v2
       - name: Generate new docker-compose.test.yml
         run: |
