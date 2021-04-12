@@ -150,7 +150,6 @@ jobs:
             echo "IMAGE_TAG=head" >> $GITHUB_ENV
           fi
       - name: Login to github registry
-        if: steps.changes.outputs.backend == 'true'
         uses: docker/login-action@v1
         with:
           registry: docker.pkg.github.com
