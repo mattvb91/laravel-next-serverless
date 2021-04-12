@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "storybook": "start-storybook -p 6006",
-    "buil-storybook": "build-storybook",
-    "cypress:open": "cypress open"
+    "buil-storybook": "build-storybook"
   },
   "dependencies": {
     "cookie": "^0.4.1",
@@ -34,7 +33,6 @@
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "babel-loader": "^8.2.2",
-    "cypress": "^7.0.1",
     "next-transpile-modules": "^6.4.0",
     "typescript": "^4.2.4"
   }
