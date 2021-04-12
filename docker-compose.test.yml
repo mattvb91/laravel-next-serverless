@@ -1,8 +1,17 @@
 version: "3"
 
+# This dockerfile is used to override the image names
+# to take the images built in our repository.
+# The ###_IMAGE_NAME_### vars are replaced in the ci process
+# to match your own repository tags
+
 services:
 
   composer:
-    image:
-    volumes:
-      - ./backend:/app
+    image: ###_PHP_COMPOSER_IMAGE_###
+
+  nextjs-ui:
+    image: ###_NEXTJS_IMAGE_###
+
+  laravel-api:
+    image: ###_LARAVEL_IMAGE_###

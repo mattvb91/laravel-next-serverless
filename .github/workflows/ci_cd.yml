@@ -138,6 +138,13 @@ jobs:
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan test
 
+  e2eTests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose -f docker-compose.test.yml up #-d once its running
+
 #  deploy-storybook:
 #   runs-on: ubuntu-latest
 #   needs: phpunit
