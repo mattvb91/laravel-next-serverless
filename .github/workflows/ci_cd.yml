@@ -159,8 +159,8 @@ jobs:
       - name: Generate new docker-compose.test.yml
         run: |
           sed -i 's%###_PHP_COMPOSER_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
-          sed -i 's%###_NEXTJS_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
-          sed -i 's%###_LARAVEL_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
+          sed -i 's%###_NEXTJS_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
+          sed -i 's%###_LARAVEL_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
           cat docker-compose.test.yml
       - name: Build the stack
         run: docker-compose -f docker-compose.test.yml up #-d once its running
