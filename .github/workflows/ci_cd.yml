@@ -52,6 +52,30 @@ jobs:
           image-tag: head # Provide Docker image tag
           pull-image: true # Raise the flag to try to pull image
 
+  build-docker-cypress-head:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
+
+    steps:
+      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            cypress:
+              - 'docker/dev/cypress/**'
+
+      - name: Build and Publish head Docker Cypress image
+        if: steps.changes.outputs.cypress == 'true'
+        uses: VaultVulp/gp-docker-action@1.1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+          image-name: cypress # Provide Docker image name
+          dockerfile: ./docker/dev/cypress/Dockerfile
+          build-context: ./docker/dev/cypress/
+          image-tag: head # Provide Docker image tag
+          pull-image: true # Raise the flag to try to pull image
+
   phpunit:
     runs-on: ubuntu-20.04
     needs:

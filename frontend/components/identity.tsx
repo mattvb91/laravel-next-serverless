@@ -3,7 +3,7 @@ export default function Identity({ me }) {
 
     return (
         <>
-            {me.name} - {me.email}
+            {me.name} - <span data-cy="identity-email">{me.email}</span>
         </>
     )
 }
