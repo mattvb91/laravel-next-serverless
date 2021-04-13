@@ -169,15 +169,18 @@ jobs:
       - name: run cypress
         run: docker run --network="host" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
         env:
-          cypress_base_url: "http://127.0.0.1:3000"
+          cypress_base_url: "http://nextjs-ui:3000"
           cypress_watchForFileChanges: false
           cypress_numTestsKeptInMemory: 0
-          cypress_retries: 3
+          cypress_retries: 2
+          cypress_videoUploadOnPasses: false
       - uses: actions/upload-artifact@v1
         if: failure()
         with:
-          name: cypress-screenshots
-          path: cypress/cypress/screenshots
+          name: cypress-output
+          path: |
+            cypress/cypress/screenshots
+            cypress/cypress/videos
 
 #  deploy-storybook:
 #   runs-on: ubuntu-latest
