@@ -164,6 +164,8 @@ jobs:
           cat docker-compose.test.yml
       - name: Build the stack
         run: |
+          docker-compose run composer composer install
+          docker-compose run composer php artisan optimize
           docker-compose -f docker-compose.test.yml up
           docker network ls
       - name: run cypress
