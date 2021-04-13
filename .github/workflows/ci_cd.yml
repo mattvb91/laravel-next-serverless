@@ -165,7 +165,7 @@ jobs:
       - name: Build the stack
         run: docker-compose -f docker-compose.test.yml up -d
       - name: run cypress
-        run: docker run -it -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
+        run: docker run -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
 
 
 #  deploy-storybook:
