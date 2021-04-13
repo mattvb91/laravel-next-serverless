@@ -163,9 +163,11 @@ jobs:
           sed -i 's%###_LARAVEL_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
           cat docker-compose.test.yml
       - name: Build the stack
-        run: docker-compose -f docker-compose.test.yml up -d
+        run: |
+          docker-compose -f docker-compose.test.yml up -d
+          docker network ls
       - name: run cypress
-        run: docker run --network="host" -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
+        run: docker run --network="nextlara_default" -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
 
 
 #  deploy-storybook:
