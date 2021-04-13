@@ -168,7 +168,11 @@ jobs:
           docker network ls
       - name: run cypress
         run: docker run --network="laravel-next-serverless_default" -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
-
+        env:
+          cypress_base_url: "http://nextjs-ui:3000"
+          cypress_watchForFileChanges: false
+          cypress_numTestsKeptInMemory: 0
+          cypress_retries: 3
 
 #  deploy-storybook:
 #   runs-on: ubuntu-latest
