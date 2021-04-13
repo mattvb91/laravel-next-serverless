@@ -173,6 +173,11 @@ jobs:
           cypress_watchForFileChanges: false
           cypress_numTestsKeptInMemory: 0
           cypress_retries: 3
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/cypress/screenshots
 
 #  deploy-storybook:
 #   runs-on: ubuntu-latest
