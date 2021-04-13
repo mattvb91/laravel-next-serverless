@@ -6,14 +6,14 @@ This is an "opinionated" (see below) template for a backend API running on Larav
 
 The local development environment is also provided through docker compose.
 
-# Define "opinionated"
+## Define "opinionated"
 In this starter kit we make use of some libraries on the frontend & backend that you may not need or wish to use. You can of course remove them and instead use your own as your requirements specify.
 
 This starter kit comes with some of the following libs already integrated ready to go: 
 
-### [styled-components](https://styled-components.com/)
-### [react-styled-flexboxgrid](https://github.com/LoicMahieu/react-styled-flexboxgrid)
-### [tymon/jwt-auth](https://github.com/tymondesigns/jwt-auth)
+#### [styled-components](https://styled-components.com/)
+#### [react-styled-flexboxgrid](https://github.com/LoicMahieu/react-styled-flexboxgrid)
+#### [tymon/jwt-auth](https://github.com/tymondesigns/jwt-auth)
 
 
 ```bash

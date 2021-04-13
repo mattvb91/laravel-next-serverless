@@ -43,6 +43,7 @@ services:
       - ./frontend:/app
     environment:
       - API_TARGET=http://laravel-api:8000
+    command: /bin/sh -c 'npm i && npm run build && npm run start'
 
   laravel-api:
     image: ###_LARAVEL_IMAGE_###
