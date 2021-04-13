@@ -166,6 +166,7 @@ jobs:
         run: |
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan optimize
+          docker-compose -f docker-compose.test.yml run php chown -R $USER:www-data /app
           docker-compose -f docker-compose.test.yml up
           docker network ls
       - name: run cypress
