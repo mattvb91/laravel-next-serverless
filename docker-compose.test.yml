@@ -23,6 +23,7 @@ services:
     tty: true
     volumes:
       - ./docker/dev/db/mysql:/var/lib/mysql
+      - ./docker/dev/db/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     environment:

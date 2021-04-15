@@ -1,2 +1,2 @@
 .idea
-docker/dev/db
+docker/dev/db/mysql
