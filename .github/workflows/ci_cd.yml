@@ -179,9 +179,9 @@ jobs:
       - name: Laravel migrate
         run: docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
       - name: run cypress
-        run: docker run --network="host" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
+        run: docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
         env:
-          cypress_base_url: "http://localhost:3000"
+          cypress_base_url: "http://nextjs-ui:3000"
           cypress_watchForFileChanges: false
           cypress_numTestsKeptInMemory: 0
           cypress_retries: 2
@@ -190,9 +190,7 @@ jobs:
         if: failure()
         with:
           name: cypress-output
-          path: |
-            cypress/cypress/screenshots
-            cypress/cypress/videos
+          path: cypress/cypress
 
 #  deploy-storybook:
 #   runs-on: ubuntu-latest
