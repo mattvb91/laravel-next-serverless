@@ -20,7 +20,8 @@ services:
     build:
       context: ./docker/dev/php
     depends_on:
-      - db
+      - db:
+          condition: service_healthy
     ports:
       - 8000:8000
     environment:

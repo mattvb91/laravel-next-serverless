@@ -170,9 +170,14 @@ jobs:
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan optimize
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chown -R $(id -u):www-data /app
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chmod -R 755 /app/storage
-          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
           docker-compose -f docker-compose.test.yml up -d
           docker network ls
+      - name: Sleep for 20 seconds #wait on mysql init
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '20s'
+      - name: Laravel migrate
+        run:  docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
       - name: run cypress
         run: docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
         env:
