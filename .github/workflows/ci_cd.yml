@@ -170,7 +170,7 @@ jobs:
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan optimize
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chown -R $(id -u):www-data /app
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chmod -R 755 /app/storage
-          docker-compose -f docker-compose.test.yml up -d
+          docker-compose -f docker-compose.test.yml up
           docker network ls
           docker-compose ps
           docker network inspect laravel-next-serverless_default
