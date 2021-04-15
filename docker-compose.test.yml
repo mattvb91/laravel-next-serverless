@@ -53,8 +53,10 @@ services:
     ports:
       - 8000:8000
     environment:
-      - XDEBUG_CONFIG="remote_host=0.0.0.0"
-      - PHP_IDE_CONFIG="serverName=laravel.local"
+      XDEBUG_CONFIG: "remote_host=0.0.0.0"
+      PHP_IDE_CONFIG: "serverName=laravel.local"
+      APP_ENV: "local"
+      APP_DEBUG: "true"
     user: 1000:82
     volumes:
       - ./backend:/app
