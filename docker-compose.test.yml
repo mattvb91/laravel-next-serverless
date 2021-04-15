@@ -55,7 +55,6 @@ services:
     environment:
       XDEBUG_CONFIG: "remote_host=0.0.0.0"
       PHP_IDE_CONFIG: "serverName=laravel.local"
-    user: 1000:82
     volumes:
       - ./backend:/app
       - ./docker/dev/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
