@@ -187,8 +187,8 @@ jobs:
           docker run -v $(pwd)/frontend:/app --env API_TARGET="http://laravel-api:8000" docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm run build
       - name: Laravel migrate
         run: |
-          docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan db:seed
           docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
+          docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan db:seed
       - name: run cypress # start nextjs-ui container now that everything is available
         run: |
           docker-compose -f docker-compose.test.yml up -d nextjs-ui
