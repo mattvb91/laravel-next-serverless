@@ -165,7 +165,7 @@ jobs:
       - name: Build the stack
         run: |
           docker run -v $(pwd)/frontend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm i
-          docker run -v $(pwd)/frontend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm build
+          docker run -v $(pwd)/frontend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm run build
           cp $(pwd)/backend/.env.example $(pwd)/backend/.env
           touch $(pwd)/backend/storage/logs/laravel.log && chmod +rw $(pwd)/backend/storage/logs/laravel.log
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
@@ -187,9 +187,7 @@ jobs:
         run: docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
       - name: run cypress
         run: |
-          export FRONTEND_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nextjs-ui)
-          docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "curl http://laravel-api:8000"
-          docker-compose -f docker-compose.test.yml logs nextjs-ui
+          docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
         env:
           cypress_base_url: "http://nextjs-ui:3000"
           cypress_watchForFileChanges: false
