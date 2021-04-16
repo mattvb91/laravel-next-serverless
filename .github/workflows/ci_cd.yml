@@ -183,7 +183,7 @@ jobs:
       - name: run cypress
         run: |
           export FRONTEND_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nextjs-ui)
-          docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "wget http://laravel-api:8000 && cat index.html && wget http://nextjs-ui:3000 && cat index.html && cd app/cypress && npm i && npm run cy:run"
+          docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "wget --content-on-error http://laravel-api:8000 && cat index.html && wget http://nextjs-ui:3000 && cat index.html && cd app/cypress && npm i && npm run cy:run"
         env:
           cypress_base_url: "http://nextjs-ui:3000"
           cypress_watchForFileChanges: false
