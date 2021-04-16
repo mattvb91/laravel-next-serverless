@@ -164,6 +164,7 @@ jobs:
           cat docker-compose.test.yml
       - name: Build the stack
         run: |
+          docker run -v $(pwd)/frontend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm i && npm build
           cp $(pwd)/backend/.env.example $(pwd)/backend/.env
           touch $(pwd)/backend/storage/logs/laravel.log && chmod +rw $(pwd)/backend/storage/logs/laravel.log
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
