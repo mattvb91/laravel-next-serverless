@@ -220,7 +220,6 @@ jobs:
               - 'frontend/**'
       - name: Check for changes
         if: steps.changes.outputs.frontend == 'true'
-      - name: Install and Build
         run: | # Install npm packages and build the Storybook files
           cd frontend && npm install
           npm run build-storybook
