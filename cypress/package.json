@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Sample test setup",
   "scripts": {
-    "cypress:open": "cypress open"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "devDependencies": {
-    "cypress": "^7.0.1"
+    "cypress": "^7.1.0"
   },
   "author": "",
   "license": "ISC"

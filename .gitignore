@@ -1,2 +1,4 @@
 .idea
-docker/dev/db
+docker/dev/db/mysql
+cypress/cypress/screenshots
+cypress/cypress/videos

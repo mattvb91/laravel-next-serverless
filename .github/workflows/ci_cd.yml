@@ -94,7 +94,7 @@ jobs:
         uses: VaultVulp/gp-docker-action@1.1.7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
-          image-name: cypress # Provide Docker image name
+          image-name: nextjs # Provide Docker image name
           dockerfile: ./docker/dev/nextjs/Dockerfile
           build-context: ./docker/dev/nextjs/
           image-tag: head # Provide Docker image tag
@@ -138,28 +138,91 @@ jobs:
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan test
 
-#  deploy-storybook:
-#   runs-on: ubuntu-latest
-#   needs: phpunit
-#   steps:
-#     - name: Checkout 🛎️
-#       uses: actions/checkout@v2
-#       with:
-#         persist-credentials: false
-#     - uses: dorny/paths-filter@v2
-#       id: changes
-#       with:
-#         filters: |
-#           frontend:
-#             - 'frontend/**'
-#     - name: Build and Publish head Docker PHP Composer image
-#       if: steps.changes.outputs.frontend == 'true'
-#     - name: Install and Build 🔧
-#       run: | # Install npm packages and build the Storybook files
-#         npm install
-#         npm run build-storybook
-#     - name: Deploy 🚀
-#       uses: JamesIves/github-pages-deploy-action@4.1.1
-#       with:
-#         branch: main # The branch the action should deploy to.
-#         folder: docs-build # The folder that the build-storybook script generates files.
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set vars
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          fi
+      - name: Login to github registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Generate new docker-compose.test.yml
+        run: |
+          sed -i 's%###_PHP_COMPOSER_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
+          sed -i 's%###_NEXTJS_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
+          sed -i 's%###_LARAVEL_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
+          cat docker-compose.test.yml
+      - name: Build the stack
+        run: |
+          cp $(pwd)/backend/.env.example $(pwd)/backend/.env
+          touch $(pwd)/backend/storage/logs/laravel.log && chmod +rw $(pwd)/backend/storage/logs/laravel.log
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan key:generate
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan jwt:secret --force
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan optimize
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan route:list
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chown -R $(id -u):www-data /app
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chmod -R 755 /app/storage
+          docker-compose -f docker-compose.test.yml up -d db laravel-api
+          docker network ls
+          docker-compose ps
+          docker network inspect laravel-next-serverless_default
+      - name: Sleep for 10 seconds # wait on mysql init
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '10s'
+      - name: Build frontend # we need api to be up for getServerSideProps
+        run:  |
+          docker run -v $(pwd)/frontend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm i
+          docker run -v $(pwd)/frontend:/app --env API_TARGET="http://laravel-api:8000" docker.pkg.github.com/${{ env.REPO_NAME }}/nextjs:${{ env.IMAGE_TAG }} npm run build
+      - name: Laravel migrate
+        run: |
+          docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan migrate
+          docker run --network="laravel-next-serverless_default" -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan db:seed
+      - name: run cypress # start nextjs-ui container now that everything is available
+        run: |
+          docker-compose -f docker-compose.test.yml up -d nextjs-ui
+          docker run --network="laravel-next-serverless_default" --env-file <(env | grep cypress_) -v $(pwd):/app docker.pkg.github.com/${{ env.REPO_NAME }}/cypress:${{ env.IMAGE_TAG }} /bin/bash -c "cd app/cypress && npm i && npm run cy:run"
+        env:
+          cypress_base_url: "http://nextjs-ui:3000"
+          cypress_watchForFileChanges: false
+          cypress_numTestsKeptInMemory: 0
+          cypress_retries: 2
+          cypress_video: false
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-output
+          path: cypress/cypress
+
+  deploy-storybook:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: cypress
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+      - name: Check for changes
+        if: steps.changes.outputs.frontend == 'true'
+        run: | # Install npm packages and build the Storybook files
+          cd frontend && npm install
+          npm run build-storybook
+      - uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: frontend/storybook-static # The folder that the build-storybook script generates files.

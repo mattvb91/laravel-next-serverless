@@ -5,4 +5,5 @@ RUN npm i -g cypress && \
     npm cache clean --force && \
     apt-get install -y tar && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* 
+    rm -rf /var/lib/apt/lists/*
+
