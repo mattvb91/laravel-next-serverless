@@ -7,6 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set vars
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          fi
       - name: Build
         run: |
           cp $(pwd)/backend/.env.example $(pwd)/backend/.env
