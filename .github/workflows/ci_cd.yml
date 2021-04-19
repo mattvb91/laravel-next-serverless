@@ -207,6 +207,7 @@ jobs:
 
   deploy-storybook:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     needs: cypress
     steps:
       - uses: actions/checkout@v2
