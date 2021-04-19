@@ -37,6 +37,7 @@ jobs:
           URL="$(npx serverless info --verbose | grep HttpApiUrl | sed s/HttpApiUrl\:\ //g)"
           cd ../frontend
           npm i
+          API_TARGET=$URL npm run build
           sed -i "s%<LAMBDA EXECUTE URL HERE>%$URL%g" serverless.yml
           npx serverless
         env:
