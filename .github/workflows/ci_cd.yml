@@ -34,6 +34,10 @@ jobs:
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chmod -R 755 /app/storage
           cd $(pwd)/backend
           npx serverless deploy
+          URL="$(npx serverless info --verbose | grep HttpApiUrl | sed s/HttpApiUrl\:\ //g)"
+          cd ../frontend
+          sed -i "s%<LAMBDA EXECUTE URL HERE>%$URL%g" serverless.yml
+          npx serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
