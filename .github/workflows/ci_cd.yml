@@ -36,8 +36,9 @@ jobs:
           npx serverless deploy
           URL="$(npx serverless info --verbose | grep HttpApiUrl | sed s/HttpApiUrl\:\ //g)"
           cd ../frontend
+          npm i
           sed -i "s%<LAMBDA EXECUTE URL HERE>%$URL%g" serverless.yml
-          npx serverless deploy
+          npx serverless
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
