@@ -224,8 +224,7 @@ jobs:
         run: | # Install npm packages and build the Storybook files
           cd frontend && npm install
           npm run build-storybook
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+      - uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: frontend/storybook-static # The folder that the build-storybook script generates files.
