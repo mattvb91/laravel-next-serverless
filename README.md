@@ -6,6 +6,8 @@ This is an "opinionated" (see below) template for a backend API running on Larav
 
 The local development environment is also provided through docker compose.
 
+Some default Laravel providers have been disabled that are not needed (?) when using purely as a JSON api. See [here](https://github.com/mattvb91/laravel-next-serverless/commit/78300b5c1a1366d3558f82f22074e95d4293e2d4) for more. PR's welcome to remove more unneeded.
+
 ## Define "opinionated"
 In this starter kit we make use of some libraries on the frontend & backend that you may not need or wish to use. You can of course remove them and instead use your own as your requirements specify.
 
