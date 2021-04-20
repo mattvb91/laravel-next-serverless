@@ -1,5 +1,5 @@
 myNextApplication:
-  component: "@sls-next/serverless-component@1.19.0-alpha.42"
+  component: "@sls-next/serverless-component@1.19.0-alpha.45"
   inputs:
     build:
       env:
