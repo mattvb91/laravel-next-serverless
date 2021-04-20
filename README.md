@@ -21,6 +21,7 @@ This starter kit comes with some of the following libs already integrated ready 
 #### [Cypress](https://github.com/cypress-io/cypress)
 
 There is also a predefined github action CI/CD workflow (WIP) for running various tests (PHPUnit & Cypress) before deployment.
+Storybook is also deployed to github pages: https://mattvb91.github.io/laravel-next-serverless/
 
 ```bash
 docker-compose up -d
