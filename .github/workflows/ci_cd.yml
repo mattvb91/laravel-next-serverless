@@ -38,7 +38,7 @@ jobs:
           cd ../frontend
           npm i
           API_TARGET=$URL npm run build
-          ed -i "s%\"<LAMBDA EXECUTE URL HERE>\"%\"$URL\"\n%g" serverless.yml
+          sed -i "s%\"<LAMBDA EXECUTE URL HERE>\"%\"$URL\"\n%g" serverless.yml
           cat serverless.yml
           echo "test output"
           npx serverless
