@@ -1,6 +1,8 @@
 import { IncomingMessage, OutgoingMessage } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
+console.log(process.env.API_TARGET);
+
 export const config = {
     api: {
         bodyParser: false,
