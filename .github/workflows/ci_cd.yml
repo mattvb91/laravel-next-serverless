@@ -39,6 +39,7 @@ jobs:
           npm i
           API_TARGET=$URL npm run build
           sed -i "s%<LAMBDA EXECUTE URL HERE>%$URL%g" serverless.yml
+          cat serverless.yml
           npx serverless
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
