@@ -3,3 +3,6 @@ myNextApplication:
   inputs:
     env:
       API_TARGET: "<LAMBDA EXECUTE URL HERE>"
+    build:
+      env:
+        API_TARGET: "<LAMBDA EXECUTE URL HERE>"
