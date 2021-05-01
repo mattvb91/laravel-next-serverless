@@ -39,8 +39,8 @@ jobs:
           npm i
           API_TARGET=$URL npm run build
           sed -i "s%\"<LAMBDA EXECUTE URL HERE>\"%\"$URL\"\n%g" serverless.yml
-          cat serverless.yml
-          echo "test output"
+          touch .env.production
+          echo API_TARGET=$URL >> .env.production
           npx serverless
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
