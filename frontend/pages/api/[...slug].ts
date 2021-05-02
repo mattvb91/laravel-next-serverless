@@ -48,6 +48,8 @@ export const internalAPIReq = async (req, res, url: string): Promise<Object> => 
             onProxyRes: (proxyRes, _proxyReq, _serverRes) => {
                 let data = "";
 
+                console.log(proxyRes);
+
                 proxyRes.on("data", (chunk) => {
                     data += chunk;
                 });
