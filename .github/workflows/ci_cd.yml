@@ -223,6 +223,53 @@ jobs:
           cd frontend && npm install
           npm run build-storybook
       - uses: JamesIves/github-pages-deploy-action@4.1.1
+        if: steps.changes.outputs.frontend == 'true'
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: frontend/storybook-static # The folder that the build-storybook script generates files.
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: cypress
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set vars
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=head" >> $GITHUB_ENV
+          fi
+      - name: Login to github registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        run: |
+          cp $(pwd)/backend/.env.example $(pwd)/backend/.env
+          touch $(pwd)/backend/storage/logs/laravel.log && chmod +rw $(pwd)/backend/storage/logs/laravel.log
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install --no-dev -o
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan key:generate
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan jwt:secret --force
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan optimize
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan route:list
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chown -R $(id -u):www-data /app
+          docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} chmod -R 755 /app/storage
+          cd $(pwd)/backend
+          npx serverless deploy
+          URL="$(npx serverless info --verbose | grep HttpApiUrl | sed s/HttpApiUrl\:\ //g)"
+          cd ../frontend
+          npm i
+          API_TARGET=$URL npm run build
+          sed -i "s%\"<LAMBDA EXECUTE URL HERE>\"%\"$URL\"\n%g" serverless.yml
+          touch .env.production
+          echo API_TARGET=$URL >> .env.production
+          npx serverless
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
