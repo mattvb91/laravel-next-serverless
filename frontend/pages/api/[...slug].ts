@@ -1,8 +1,6 @@
 import { IncomingMessage, OutgoingMessage } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-console.log(process.env.API_TARGET);
-
 export const config = {
     api: {
         bodyParser: false,
@@ -25,9 +23,15 @@ export const proxyContext = {
  * 
  * PR's welcome to improve this.
  * 
- * TLDR: this helps prevent double network requests when doing internal api requests.
+ * TLDR: this should help prevent double network requests when doing internal api requests.
  */
 export const internalAPIReq = async (req, res, url: string): Promise<Object> => {
+
+    //Current hack for lambda because we dont have access to an IncomingMessage so
+    //in lambda env we need to go through http again. This should be fixed
+    return (await fetch(process.env.API_TARGET + url)).json()
+
+    //We should do this instead and not trigger a fetch http request
     req.url = url;
 
     //Just fake a new response object so the proxyMiddleware doesn't 
@@ -47,8 +51,6 @@ export const internalAPIReq = async (req, res, url: string): Promise<Object> => 
             ...proxyContext,
             onProxyRes: (proxyRes, _proxyReq, _serverRes) => {
                 let data = "";
-
-                console.log(proxyRes);
 
                 proxyRes.on("data", (chunk) => {
                     data += chunk;
@@ -76,3 +78,4 @@ export default function (req: IncomingMessage, res: OutgoingMessage) {
         throw new Error(`Request '${req.url}' is not proxied! We should never reach here!`);
     });
 };
+
