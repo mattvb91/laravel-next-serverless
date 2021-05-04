@@ -6,4 +6,3 @@ RUN npm i -g cypress && \
     apt-get install -y tar && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
