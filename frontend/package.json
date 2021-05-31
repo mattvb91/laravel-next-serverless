@@ -34,7 +34,7 @@
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "babel-loader": "^8.2.2",
-    "next-transpile-modules": "^7.0.0",
+    "next-transpile-modules": "^7.2.0",
     "typescript": "^4.2.4"
   }
 }
