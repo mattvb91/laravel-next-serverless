@@ -27,7 +27,7 @@
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
     "@storybook/react": "^6.2.9",
-    "@types/express": "^4.17.12",
+    "@types/express": "^4.17.13",
     "@types/http-proxy-middleware": "^1.0.0",
     "@types/node": "^15.12.1",
     "@types/styled-components": "^5.1.10",
