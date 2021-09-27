@@ -278,16 +278,16 @@
         },
         {
             "name": "bref/bref",
-            "version": "1.2.14",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brefphp/bref.git",
-                "reference": "7b112c9a808864ee75e62fcae19103bf686b6d50"
+                "reference": "2b8cdaf1ecffbfa15dbdea6ec9d7c3506d22f77b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brefphp/bref/zipball/7b112c9a808864ee75e62fcae19103bf686b6d50",
-                "reference": "7b112c9a808864ee75e62fcae19103bf686b6d50",
+                "url": "https://api.github.com/repos/brefphp/bref/zipball/2b8cdaf1ecffbfa15dbdea6ec9d7c3506d22f77b",
+                "reference": "2b8cdaf1ecffbfa15dbdea6ec9d7c3506d22f77b",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +340,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brefphp/bref/issues",
-                "source": "https://github.com/brefphp/bref/tree/1.2.14"
+                "source": "https://github.com/brefphp/bref/tree/1.3.2"
             },
             "funding": [
                 {
@@ -352,7 +352,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-04T08:10:24+00:00"
+            "time": "2021-09-24T16:53:27+00:00"
         },
         {
             "name": "bref/laravel-bridge",
@@ -1328,16 +1328,16 @@
         },
         {
             "name": "hollodotme/fast-cgi-client",
-            "version": "v3.1.5",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hollodotme/fast-cgi-client.git",
-                "reference": "8a9b2bd38ccfd8fc6905a6b1acfbb9f84ed700dd"
+                "reference": "c8c79696cbe1f474c814b99bf48f54a85ad9f6f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hollodotme/fast-cgi-client/zipball/8a9b2bd38ccfd8fc6905a6b1acfbb9f84ed700dd",
-                "reference": "8a9b2bd38ccfd8fc6905a6b1acfbb9f84ed700dd",
+                "url": "https://api.github.com/repos/hollodotme/fast-cgi-client/zipball/c8c79696cbe1f474c814b99bf48f54a85ad9f6f6",
+                "reference": "c8c79696cbe1f474c814b99bf48f54a85ad9f6f6",
                 "shasum": ""
             },
             "require": {
@@ -1345,29 +1345,9 @@
                 "php": ">=7.1"
             },
             "require-dev": {
-                "ext-xdebug": ">=2.6.0",
-                "tm/tooly-composer-script": "^1.4.1"
+                "ext-xdebug": ">=2.6.0"
             },
             "type": "library",
-            "extra": {
-                "tools": {
-                    "phpunit7": {
-                        "url": "https://phar.phpunit.de/phpunit-7.phar",
-                        "replace": true,
-                        "only-dev": true
-                    },
-                    "phpunit8": {
-                        "url": "https://phar.phpunit.de/phpunit-8.phar",
-                        "replace": true,
-                        "only-dev": true
-                    },
-                    "phpunit9": {
-                        "url": "https://phar.phpunit.de/phpunit-9.phar",
-                        "replace": true,
-                        "only-dev": true
-                    }
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "hollodotme\\FastCGI\\": "src/"
@@ -1392,9 +1372,9 @@
             ],
             "support": {
                 "issues": "https://github.com/hollodotme/fast-cgi-client/issues",
-                "source": "https://github.com/hollodotme/fast-cgi-client/tree/v3.1.5"
+                "source": "https://github.com/hollodotme/fast-cgi-client/tree/v3.1.6"
             },
-            "time": "2020-12-10T10:15:06+00:00"
+            "time": "2021-09-23T10:05:19+00:00"
         },
         {
             "name": "laravel/framework",
