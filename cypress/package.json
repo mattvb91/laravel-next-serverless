@@ -7,7 +7,7 @@
     "cy:run": "cypress run"
   },
   "devDependencies": {
-    "cypress": "^7.5.0"
+    "cypress": "^9.2.0"
   },
   "author": "",
   "license": "ISC"
