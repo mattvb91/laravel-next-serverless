@@ -3,13 +3,15 @@ import { useAuth } from "../contexts/auth"
 
 const Login = () => {
 
-    const auth = useAuth()
+    const { login, me } = useAuth()
 
     const loginSubmit = async event => {
         event.preventDefault()
 
-        auth.login(event.target.email.value, event.target.password.value)
+        login(event.target.email.value, event.target.password.value)
     }
+
+    if (me) return <></>
 
     return (
         <>

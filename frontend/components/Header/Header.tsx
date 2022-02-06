@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ auth }) => {
             {auth && auth.me ? (
               <>
                 <Identity me={auth.me} />
-                <Button size="small" onClick={() => auth.logout} label="Log out" />
+                <Button size="small" onClick={() => auth.logout()} label="Log out" />
               </>
             ) : (
               <>

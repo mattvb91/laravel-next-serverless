@@ -1,4 +1,4 @@
-FROM php:8-alpine
+FROM php:8.1-alpine
 
 RUN apk --no-cache add libmcrypt-dev \
                        libltdl \
@@ -32,7 +32,7 @@ ADD usr /usr/local/etc/php/conf.d/
 #### COMPOSER
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 2.0.13
+ENV COMPOSER_VERSION 2.2.6
 
 ARG HOST_USER_UID=1000
 ARG HOST_USER_GID=1000
@@ -59,7 +59,7 @@ RUN chmod +x /entrypoint.sh \
  && apk --no-cache del autoconf g++ make \
  && curl -s -f -L -o /tmp/installer.php https://getcomposer.org/installer \
  && php -r " \
-    \$signature = '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3'; \
+    \$signature = '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8'; \
     \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
     if (!hash_equals(\$signature, \$hash)) { \
         unlink('/tmp/installer.php'); \
