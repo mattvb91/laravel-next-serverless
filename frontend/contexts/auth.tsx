@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     const [identity, setIdentity]: [identity: Identity, setIdentity: Dispatch<SetStateAction<Identity>>] = useState()
     const [me, setMe]: [me: MeType, setMe: Dispatch<SetStateAction<MeType>>] = useState()
     const [loading, setLoading] = useState(true)
-    const [cookie, setCookie] = useCookies(["identity"])
+    const [cookie, setCookie, removeCookie] = useCookies(["identity"])
     const router = useRouter()
 
     const refresh = async () => {
@@ -107,7 +107,16 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const logout = async () => { }
+    /**
+     * Clear everything
+     * Bit hacky but demonstrates whats going on
+     */
+    const logout = async () => {
+        window.localStorage.setItem("canRefresh", "false")
+        setIdentity(null)
+        setMe(null)
+        removeCookie("token")
+    }
 
     return (
         <AuthContext.Provider value={{ isAuthenticated: !!identity, identity, me, login, loading, logout }}>

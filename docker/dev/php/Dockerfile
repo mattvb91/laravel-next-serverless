@@ -1,4 +1,4 @@
-FROM php:8-alpine
+FROM php:8.1-alpine
 
 RUN apk --no-cache add libmcrypt-dev \
                        libltdl \
