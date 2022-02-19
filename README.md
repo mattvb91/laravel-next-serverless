@@ -15,7 +15,7 @@ This starter kit comes with some of the following libs already integrated ready 
 
 #### [styled-components](https://styled-components.com/)
 #### [react-styled-flexboxgrid](https://github.com/LoicMahieu/react-styled-flexboxgrid)
-#### [tymon/jwt-auth](https://github.com/tymondesigns/jwt-auth)
+#### [PHP-Open-Source-Saver/jwt-auth](https://github.com/PHP-Open-Source-Saver/jwt-auth)
 #### [storybook](https://github.com/storybookjs/storybook/)
 #### [clockwork](https://github.com/itsgoingd/clockwork)
 #### [Cypress](https://github.com/cypress-io/cypress)
