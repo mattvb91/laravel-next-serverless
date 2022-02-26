@@ -105,7 +105,7 @@ jobs:
     needs:
       - build-docker-php-head
       - build-docker-php-composer-head
-    if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && always() }}
+    if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && !cancelled() }}
     steps:
       - uses: actions/checkout@v2 # Checking out the repo
       - uses: dorny/paths-filter@v2
