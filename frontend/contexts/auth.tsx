@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     const [identity, setIdentity]: [identity: Identity, setIdentity: Dispatch<SetStateAction<Identity>>] = useState()
     const [me, setMe]: [me: MeType, setMe: Dispatch<SetStateAction<MeType>>] = useState()
     const [loading, setLoading] = useState(true)
-    const [cookie, setCookie, removeCookie] = useCookies(["identity"])
+    const [cookie, setCookie, removeCookie] = useCookies(["token"])
     const router = useRouter()
 
     const refresh = async () => {
@@ -95,7 +95,6 @@ export const AuthProvider = ({ children }) => {
 
         const response = await res.json()
         if (response.access_token) {
-            setIdentity(response)
             setCookie("token", response.access_token, {
                 path: "/",
                 maxAge: 3600, // Expires after 1hr
@@ -103,6 +102,8 @@ export const AuthProvider = ({ children }) => {
                 httpOnly: false
             })
             window.localStorage.setItem("canRefresh", "true")
+            setIdentity(response)
+
             router.push("/")
         }
     }

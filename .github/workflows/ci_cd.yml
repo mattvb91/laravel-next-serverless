@@ -105,7 +105,7 @@ jobs:
     needs:
       - build-docker-php-head
       - build-docker-php-composer-head
-    if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && always() }}
+    if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && !cancelled() }}
     steps:
       - uses: actions/checkout@v2 # Checking out the repo
       - uses: dorny/paths-filter@v2
@@ -135,6 +135,7 @@ jobs:
         run: |
           echo ${{ env.REPO_NAME }}
           echo ${{ env.IMAGE_TAG }}
+          cp $(pwd)/backend/.env.example $(pwd)/backend/.env
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan test
 
