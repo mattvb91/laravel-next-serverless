@@ -135,6 +135,7 @@ jobs:
         run: |
           echo ${{ env.REPO_NAME }}
           echo ${{ env.IMAGE_TAG }}
+          cp $(pwd)/backend/.env.example $(pwd)/backend/.env
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} composer install
           docker run -v $(pwd)/backend:/app docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }} php artisan test
 
