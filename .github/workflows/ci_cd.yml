@@ -18,7 +18,7 @@ jobs:
       - name: Build and Publish head Docker PHP image
         # run only if some file in 'src' folder was changed
         if: steps.changes.outputs.php == 'true'
-        uses: VaultVulp/gp-docker-action@1.1.7
+        uses: VaultVulp/gp-docker-action@1.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
           image-name: php # Provide Docker image name
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build and Publish head Docker PHP Composer image
         if: steps.changes.outputs.composer == 'true'
-        uses: VaultVulp/gp-docker-action@1.1.7
+        uses: VaultVulp/gp-docker-action@1.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
           image-name: php-composer # Provide Docker image name
@@ -67,7 +67,7 @@ jobs:
 
       - name: Build and Publish head Docker Cypress image
         if: steps.changes.outputs.cypress == 'true'
-        uses: VaultVulp/gp-docker-action@1.1.7
+        uses: VaultVulp/gp-docker-action@1.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
           image-name: cypress # Provide Docker image name
@@ -91,7 +91,7 @@ jobs:
 
       - name: Build and Publish head Docker Cypress image
         if: steps.changes.outputs.nextjs == 'true'
-        uses: VaultVulp/gp-docker-action@1.1.7
+        uses: VaultVulp/gp-docker-action@1.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
           image-name: nextjs # Provide Docker image name
