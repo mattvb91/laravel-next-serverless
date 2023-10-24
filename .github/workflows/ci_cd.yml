@@ -7,7 +7,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
 
     steps:
-      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: actions/checkout@v4 # Checking out the repo
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -33,7 +33,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
 
     steps:
-      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: actions/checkout@v4 # Checking out the repo
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -57,7 +57,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
 
     steps:
-      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: actions/checkout@v4 # Checking out the repo
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -81,7 +81,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' # Running this job only for develop branch
 
     steps:
-      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: actions/checkout@v4 # Checking out the repo
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -107,7 +107,7 @@ jobs:
       - build-docker-php-composer-head
     if: ${{ (needs.build-docker-php-head.result == 'success' || needs.build-docker-php-head.result == 'skipped') && (needs.build-docker-php-composer-head.result == 'success' || needs.build-docker-php-composer-head.result == 'skipped')  && !cancelled() }}
     steps:
-      - uses: actions/checkout@v2 # Checking out the repo
+      - uses: actions/checkout@v4 # Checking out the repo
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -156,7 +156,7 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Generate new docker-compose.test.yml
         run: |
           sed -i 's%###_PHP_COMPOSER_IMAGE_###%docker.pkg.github.com/${{ env.REPO_NAME }}/php-composer:${{ env.IMAGE_TAG }}%g' docker-compose.test.yml
@@ -211,7 +211,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs: cypress
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -235,7 +235,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs: cypress
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set vars
         run: |
           echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
