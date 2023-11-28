@@ -223,7 +223,7 @@ jobs:
         run: | # Install npm packages and build the Storybook files
           cd frontend && npm install
           npm run build-storybook
-      - uses: JamesIves/github-pages-deploy-action@4.1.1
+      - uses: JamesIves/github-pages-deploy-action@v4.5.0
         if: steps.changes.outputs.frontend == 'true'
         with:
           branch: gh-pages # The branch the action should deploy to.
