@@ -200,7 +200,7 @@ jobs:
           cypress_numTestsKeptInMemory: 0
           cypress_retries: 2
           cypress_video: false
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-output
