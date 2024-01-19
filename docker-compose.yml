@@ -32,7 +32,7 @@ services:
         - ./docker/dev/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
 
   db:
-    image: mysql:8.0
+    image: mysql:8.3
     container_name: db
     restart: unless-stopped
     tty: true
