@@ -17,7 +17,7 @@ services:
       - ./backend:/app
 
   db:
-    image: mysql:8.0
+    image: mysql:8.3
     container_name: db
     restart: unless-stopped
     tty: true
